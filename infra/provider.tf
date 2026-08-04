@@ -92,3 +92,51 @@ resource "aws_route_table_association" "public_b_association" {
   route_table_id = aws_route_table.public_rt.id
 
 }
+
+resource "aws_subnet" "private_a" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/25"
+  availability_zone       = "eu-west-2a"
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name        = "private-a"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+
+}
+
+resource "aws_subnet" "private_b" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.128/25"
+  availability_zone       = "eu-west-2b"
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name        = "private-b"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+
+}
+
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name        = "private-rt"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+}
+
+resource "aws_route_table_association" "private_a_association" {
+  subnet_id      = aws_subnet.private_a.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "private_b_association" {
+  subnet_id      = aws_subnet.private_b.id
+  route_table_id = aws_route_table.private_rt.id
+}
