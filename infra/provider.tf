@@ -180,3 +180,15 @@ resource "aws_vpc_security_group_egress_rule" "alb_all_outbound" {
   ip_protocol = "-1"
 
 }
+
+resource "aws_security_group" "ecs_sg" {
+  name   = "ecs-sg"
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name        = "ecs-sg"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+
+}
