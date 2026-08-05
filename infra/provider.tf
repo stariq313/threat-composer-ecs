@@ -206,3 +206,52 @@ resource "aws_vpc_security_group_egress_rule" "ecs_all_outbound" {
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
+
+resource "aws_ecs_cluster" "main" {
+  name = "ecsv1-cluster"
+
+  tags = {
+    Name        = "ecsv1-cluster"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/ecs/ecsv1-threatmod"
+  retention_in_days = 7
+
+  tags = {
+    Name        = "ecsv1-threatmod-logs"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+}
+
+data "aws_iam_policy_document" "ecs_task_execution_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsv1-task-execution-role"
+
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_assume_role.json
+
+  tags = {
+    Name        = "ecsv1-task-execution-role"
+    Project     = "ecs-v1"
+    Environment = "dev"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
