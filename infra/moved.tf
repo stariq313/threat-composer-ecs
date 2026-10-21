@@ -93,3 +93,32 @@ moved {
   to   = module.security.aws_vpc_security_group_egress_rule.ecs_all_outbound
 }
 
+moved {
+  from = aws_ecs_cluster.main
+  to   = module.ecs.aws_ecs_cluster.main
+}
+
+moved {
+  from = aws_ecs_task_definition.app
+  to   = module.ecs.aws_ecs_task_definition.app
+}
+
+moved {
+  from = aws_iam_role.ecs_task_execution_role
+  to   = module.ecs.aws_iam_role.ecs_task_execution_role
+}
+
+moved {
+  from = aws_iam_role_policy_attachment.ecs_task_execution_policy
+  to   = module.ecs.aws_iam_role_policy_attachment.ecs_task_execution_policy
+}
+
+moved {
+  from = aws_cloudwatch_log_group.app
+  to   = module.ecs.aws_cloudwatch_log_group.app
+}
+
+moved {
+  from = data.aws_iam_policy_document.ecs_task_execution_assume_role
+  to   = module.ecs.data.aws_iam_policy_document.ecs_task_execution_assume_role
+}
