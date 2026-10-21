@@ -1,6 +1,6 @@
 resource "aws_security_group" "alb_sg" {
   name   = "alb-sg"
-  vpc_id = module.network.vpc_id
+  vpc_id = var.vpc_id
 
   tags = {
     Name        = "alb-sg"
@@ -40,7 +40,7 @@ resource "aws_vpc_security_group_egress_rule" "alb_all_outbound" {
 
 resource "aws_security_group" "ecs_sg" {
   name   = "ecs-sg"
-  vpc_id = module.network.vpc_id
+  vpc_id = var.vpc_id
 
   tags = {
     Name        = "ecs-sg"
